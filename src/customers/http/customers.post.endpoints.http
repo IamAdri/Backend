@@ -2,11 +2,11 @@ POST http://localhost:3001/customers
 Content-Type: application/json
 
 {
-    "companyName": "Iasi_Transport",
-    "contactName": "Catalin Ceban",
-    "contactEmail": "catalin@gmail.com",
-    "industry": "transport and logistics",
-    "projectType":"crm",
+    "companyName": "Beauty",
+    "contactName": "Mirela Donici",
+    "contactEmail": "mirela@gmail.com",
+    "industry": "e-commerce",
+    "projectType":"web_platform",
     "status": "scheduled",
-    "deadline": "2026-10-03T16:03:21.482Z"
+    "deadline": "2026-12-25T16:03:21.482Z"
 }

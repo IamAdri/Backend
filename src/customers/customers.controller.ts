@@ -1,6 +1,7 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { CreateCustomerDto } from './dtos/create-customer.dto';
 import { CustomersService } from './providers/customers.service';
+import { PaginationQueryDto } from 'src/common/pagination/dtos/pagination-query.dto';
 
 @Controller('customers')
 export class CustomersController {
@@ -15,7 +16,7 @@ export class CustomersController {
   }
 
   @Get()
-  public getAllCustomers() {
-    return this.customersService.getAll();
+  public getAllCustomers(@Query() customersQuery: PaginationQueryDto) {
+    return this.customersService.getAll(customersQuery);
   }
 }
