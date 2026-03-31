@@ -1,0 +1,12 @@
+PATCH http://localhost:3001/customers/14
+Content-Type: application/json
+
+{
+    "companyName": "TUDOR",
+    "contactName": "Mirela Donici",
+    "contactEmail": "mirela@gmail.com",
+    "industry": "e-commerce",
+    "projectType":"web_platform",
+    "status": "scheduled",
+    "deadline": "2026-12-25T16:03:21.482Z"
+}

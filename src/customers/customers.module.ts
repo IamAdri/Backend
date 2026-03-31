@@ -6,10 +6,18 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Customer } from './customer.entity';
 import { PaginationModule } from 'src/common/pagination/pagination.module';
 import { GetCustomersProvider } from './providers/get-customers.provider';
+import { PatchCustomersProvider } from './providers/patch-customer.provider';
+import { DeleteCustomersProvider } from './providers/delete-customer.provider';
 
 @Module({
   controllers: [CustomersController],
-  providers: [CustomersService, CreateCustomerProvider, GetCustomersProvider],
+  providers: [
+    CustomersService,
+    CreateCustomerProvider,
+    GetCustomersProvider,
+    PatchCustomersProvider,
+    DeleteCustomersProvider,
+  ],
   imports: [TypeOrmModule.forFeature([Customer]), PaginationModule],
 })
 export class CustomersModule {}
