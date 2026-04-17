@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { PaginationProvider } from 'src/common/pagination/providers/pagination.provider';
 import { Paginated } from 'src/common/pagination/interfaces/paginated.interface';
 import { PaginationQueryDto } from 'src/common/pagination/dtos/pagination-query.dto';
+import { custom } from 'joi';
 
 @Injectable()
 export class GetCustomersProvider {
@@ -31,6 +32,13 @@ export class GetCustomersProvider {
         },
       },
     );
+    customers.data = customers.data.map((customer) => ({
+      ...customer,
+      teamMembers: customer.teamMembers?.sort((a, b) =>
+        a.name.localeCompare(b.name),
+      ),
+    }));
+
     return customers;
   }
 }

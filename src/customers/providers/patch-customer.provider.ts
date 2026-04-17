@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Customer } from '../customer.entity';
 import { Repository } from 'typeorm';
 import { PatchCustomerDto } from '../dtos/patch-customer.dto';
+import { TeamMembersService } from 'src/team-members/providers/team-members.service';
 
 @Injectable()
 export class PatchCustomersProvider {
@@ -10,8 +11,17 @@ export class PatchCustomersProvider {
     /**Inject repository Customer*/
     @InjectRepository(Customer)
     private readonly customersRepository: Repository<Customer>,
+    /**Inject TeamMembersService */
+    private readonly teamMembersService: TeamMembersService,
   ) {}
   public async update(patchCustomerDto: PatchCustomerDto, id: number) {
+    //Find the teamMembers associated
+    let teamMembers;
+    if (patchCustomerDto.teamMembers) {
+      teamMembers = await this.teamMembersService.findMultipleTeamMembers(
+        patchCustomerDto.teamMembers,
+      );
+    }
     const customer = await this.customersRepository.findOneBy({
       id: id,
     });
@@ -27,6 +37,7 @@ export class PatchCustomersProvider {
         patchCustomerDto.projectType ?? customer.projectType;
       customer.status = patchCustomerDto.status ?? customer.status;
       customer.deadline = patchCustomerDto.deadline ?? customer.deadline;
+      customer.teamMembers = teamMembers;
     }
 
     if (customer) {

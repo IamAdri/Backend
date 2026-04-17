@@ -2,10 +2,13 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinTable,
+  ManyToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { customerProjectType } from './enums/customerProjectType.enum';
 import { customerStatus } from './enums/customerStatus.enum';
+import { TeamMember } from 'src/team-members/team-member.entity';
 
 @Entity()
 export class Customer {
@@ -54,6 +57,12 @@ export class Customer {
     default: customerStatus.SCHEDULED,
   })
   status: customerStatus;
+
+  @ManyToMany(() => TeamMember, (teamMember) => teamMember.customers, {
+    eager: true,
+  })
+  @JoinTable()
+  teamMembers?: TeamMember[];
 
   @Column({
     type: 'timestamp',

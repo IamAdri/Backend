@@ -1,0 +1,8 @@
+PATCH http://localhost:3001/team-members/11
+Content-Type: application/json
+
+{
+    "name": "Mirel",
+    "contactNumber": "0755355555",
+    "contactEmail": "mirel@gmail.com"
+}

@@ -8,6 +8,7 @@ import { PaginationModule } from 'src/common/pagination/pagination.module';
 import { GetCustomersProvider } from './providers/get-customers.provider';
 import { PatchCustomersProvider } from './providers/patch-customer.provider';
 import { DeleteCustomersProvider } from './providers/delete-customer.provider';
+import { TeamMembersModule } from 'src/team-members/team-members.module';
 
 @Module({
   controllers: [CustomersController],
@@ -18,6 +19,10 @@ import { DeleteCustomersProvider } from './providers/delete-customer.provider';
     PatchCustomersProvider,
     DeleteCustomersProvider,
   ],
-  imports: [TypeOrmModule.forFeature([Customer]), PaginationModule],
+  imports: [
+    TypeOrmModule.forFeature([Customer]),
+    PaginationModule,
+    TeamMembersModule,
+  ],
 })
 export class CustomersModule {}

@@ -1,8 +1,12 @@
 import {
+  IsArray,
   IsDate,
   IsEmail,
   IsEnum,
+  IsIn,
+  IsInt,
   IsNotEmpty,
+  IsOptional,
   IsString,
   MaxLength,
 } from 'class-validator';
@@ -40,4 +44,9 @@ export class CreateCustomerDto {
   @IsDate()
   @IsNotEmpty()
   deadline: Date;
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  teamMembers?: string[];
 }
