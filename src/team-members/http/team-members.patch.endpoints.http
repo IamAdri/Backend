@@ -1,8 +1,9 @@
-PATCH http://localhost:3001/team-members/11
+PATCH http://localhost:3001/team-members/23
 Content-Type: application/json
 
 {
-    "name": "Mirel",
-    "contactNumber": "0755355555",
-    "contactEmail": "mirel@gmail.com"
+    "name": "Ion Mardari",
+    "contactNumber": "0735355559",
+    "contactEmail": "ion@gmail.com",
+    "customers": ["Adrielle"]
 }

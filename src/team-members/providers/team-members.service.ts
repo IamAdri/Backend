@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { In, Repository } from 'typeorm';
 import { TeamMember } from '../team-member.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -7,6 +7,8 @@ import { GetTeamMembersDto } from '../dtos/get-team-members.dto';
 import { Paginated } from 'src/common/pagination/interfaces/paginated.interface';
 import { PaginationProvider } from 'src/common/pagination/providers/pagination.provider';
 import { PatchTeamMemberDto } from '../dtos/patch-team-member.dto';
+import { CustomersService } from 'src/customers/providers/customers.service';
+import { Customer } from 'src/customers/customer.entity';
 
 @Injectable()
 export class TeamMembersService {
@@ -14,8 +16,13 @@ export class TeamMembersService {
     /**Inject teamMemberRepository */
     @InjectRepository(TeamMember)
     private readonly teamMemberRepository: Repository<TeamMember>,
+    /**Inject customerRepository */
+    @InjectRepository(Customer)
+    private readonly customerRepository: Repository<Customer>,
     /**Inject paginationProvider */
     private readonly paginationProvider: PaginationProvider,
+    /**Inject customersService */
+    //   private readonly customersService: CustomersService,
   ) {}
   public async getAll(
     teamMemberQuery: GetTeamMembersDto,
@@ -30,8 +37,22 @@ export class TeamMembersService {
         order: {
           name: 'ASC',
         },
+        relations: ['customers'],
+        select: {
+          customers: {
+            id: true,
+            companyName: true,
+          },
+        },
       },
     );
+    teamMembers.data.forEach((teamMember) => {
+      if (teamMember.customers && teamMember.customers.length > 0) {
+        teamMember.customers.sort((a, b) =>
+          (a.companyName || '').localeCompare(b.companyName || ''),
+        );
+      }
+    });
     return teamMembers;
   }
 
@@ -48,8 +69,15 @@ export class TeamMembersService {
   }
 
   public async create(createTeamMemberDto: CreateTeamMemberDto) {
+    let customers;
+    if (createTeamMemberDto.customers) {
+      customers = await this.customerRepository.findBy({
+        companyName: In(createTeamMemberDto.customers),
+      });
+    }
     let newTeamMember = this.teamMemberRepository.create({
       ...createTeamMemberDto,
+      customers: customers,
     });
     newTeamMember = await this.teamMemberRepository.save(newTeamMember);
     return newTeamMember;
@@ -60,9 +88,16 @@ export class TeamMembersService {
   }
 
   public async update(patchTeamMemberDto: PatchTeamMemberDto, id: number) {
-    const teamMember = await this.teamMemberRepository.findOneBy({
-      id: id,
+    const teamMember = await this.teamMemberRepository.findOne({
+      where: { id },
+      relations: ['customers'],
     });
+    if (!teamMember) return null;
+    if (patchTeamMemberDto.customers) {
+      teamMember.customers = await this.customerRepository.findBy({
+        companyName: In(patchTeamMemberDto.customers),
+      });
+    }
     if (teamMember) {
       teamMember.name = patchTeamMemberDto.name ?? teamMember.name;
       teamMember.contactNumber =
@@ -89,6 +124,14 @@ export class TeamMembersService {
     return results;
   }
 }
+/**
+ * let teamMembers;
+    if (createCustomerDto.teamMembers) {
+      teamMembers = await this.teamMembersService.findMultipleTeamMembers(
+        createCustomerDto.teamMembers,
+      );
+    }
+ */
 
 /*public async getAll(
     customerQuery: PaginationQueryDto,

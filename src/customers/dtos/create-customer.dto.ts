@@ -12,6 +12,7 @@ import {
 } from 'class-validator';
 import { customerProjectType } from '../enums/customerProjectType.enum';
 import { customerStatus } from '../enums/customerStatus.enum';
+import { TeamMember } from 'src/team-members/team-member.entity';
 
 export class CreateCustomerDto {
   @IsString()

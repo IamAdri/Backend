@@ -1,9 +1,15 @@
-import { Injectable, RequestTimeoutException } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import {
+  forwardRef,
+  Inject,
+  Injectable,
+  RequestTimeoutException,
+} from '@nestjs/common';
+import { In, Repository } from 'typeorm';
 import { Customer } from '../customer.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateCustomerDto } from '../dtos/create-customer.dto';
 import { TeamMembersService } from 'src/team-members/providers/team-members.service';
+import { TeamMember } from 'src/team-members/team-member.entity';
 
 @Injectable()
 export class CreateCustomerProvider {
@@ -11,19 +17,21 @@ export class CreateCustomerProvider {
     /**Inject customer repository */
     @InjectRepository(Customer)
     private readonly customersRepository: Repository<Customer>,
+    /**Inject teamMemberRepository */
+    @InjectRepository(TeamMember)
+    private readonly teamMemberRepository: Repository<TeamMember>,
     /**Inject TeamMembersService */
-    private readonly teamMembersService: TeamMembersService,
+    //   private readonly teamMembersService: TeamMembersService,
   ) {}
 
   public async createCustomer(createCustomerDto: CreateCustomerDto) {
     //Find teamMembers
     let teamMembers;
     if (createCustomerDto.teamMembers) {
-      teamMembers = await this.teamMembersService.findMultipleTeamMembers(
-        createCustomerDto.teamMembers,
-      );
+      teamMembers = await this.teamMemberRepository.findBy({
+        name: In(createCustomerDto.teamMembers),
+      });
     }
-
     let newCustomer;
     try {
       newCustomer = this.customersRepository.create({

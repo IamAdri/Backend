@@ -2,7 +2,9 @@ POST http://localhost:3001/team-members
 Content-Type: application/json
 
 {
-    "name": "Adriana Mircea",
-    "contactNumber": "0777777777",
-    "contactEmail":"adriana@gmail.com"
+    "name": "Ion Mardari",
+    "contactNumber": "0727377727",
+    "contactEmail":"ion@gmail.com",
+    "customers":["Solo"]
+    
 }

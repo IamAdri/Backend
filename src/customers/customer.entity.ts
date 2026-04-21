@@ -58,9 +58,7 @@ export class Customer {
   })
   status: customerStatus;
 
-  @ManyToMany(() => TeamMember, (teamMember) => teamMember.customers, {
-    eager: true,
-  })
+  @ManyToMany(() => TeamMember, (teamMember) => teamMember.customers)
   @JoinTable()
   teamMembers?: TeamMember[];
 

@@ -9,6 +9,7 @@ import { PaginationQueryDto } from 'src/common/pagination/dtos/pagination-query.
 import { PatchCustomersProvider } from './patch-customer.provider';
 import { PatchCustomerDto } from '../dtos/patch-customer.dto';
 import { DeleteCustomersProvider } from './delete-customer.provider';
+import { FindMultipleCustomersProvider } from './get-multiple-customers.provider';
 
 @Injectable()
 export class CustomersService {
@@ -21,6 +22,8 @@ export class CustomersService {
     private readonly patchCustomersProvider: PatchCustomersProvider,
     /**Inject deleteCustomersProvider */
     private readonly deleteCustomersProvider: DeleteCustomersProvider,
+    /**Inject findMultipleCustomersProvider */
+    private readonly findMultipleCustomersProvider: FindMultipleCustomersProvider,
     /**Inject customer repository */
     @InjectRepository(Customer)
     private readonly customersRepository: Repository<Customer>,
@@ -34,11 +37,21 @@ export class CustomersService {
     return await this.getCustomersProvider.getAll(getCustomersDto);
   }
 
+  public async getAllCompanyNames() {
+    return await this.getCustomersProvider.getAllCompanyNames();
+  }
+
   public async update(patchCustomerDto: PatchCustomerDto, id: number) {
     return await this.patchCustomersProvider.update(patchCustomerDto, id);
   }
 
   public async delete(id: number) {
     return await this.deleteCustomersProvider.deleteCustomer(id);
+  }
+
+  public async findMultipleCustomers(customers: string[]) {
+    return await this.findMultipleCustomersProvider.findMultipleCustomers(
+      customers,
+    );
   }
 }

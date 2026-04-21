@@ -31,6 +31,11 @@ export class CustomersController {
     return this.customersService.getAll(customersQuery);
   }
 
+  @Get('names')
+  public getAllCompanyNames() {
+    return this.customersService.getAllCompanyNames();
+  }
+
   @Patch(':id')
   public updateCustomer(
     @Body() patchCustomerDto: PatchCustomerDto,

@@ -1,6 +1,8 @@
 import {
+  IsArray,
   IsEmail,
   IsNotEmpty,
+  IsOptional,
   IsPhoneNumber,
   isPhoneNumber,
   IsString,
@@ -22,4 +24,14 @@ export class CreateTeamMemberDto {
   @IsNotEmpty()
   @IsEmail()
   contactEmail: string;
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  customers?: string[];
 }
+/**
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  customers?: string[]; */

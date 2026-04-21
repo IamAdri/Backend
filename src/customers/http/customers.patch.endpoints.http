@@ -1,4 +1,4 @@
-PATCH http://localhost:3001/customers/23
+PATCH http://localhost:3001/customers/1
 Content-Type: application/json
 
 {
@@ -9,5 +9,5 @@ Content-Type: application/json
     "projectType":"web_platform",
     "status": "scheduled",
     "deadline": "2026-12-25T16:03:21.482Z",
-    "teamMembers": ["Adriana Sprincean","Mircea Stefan"]
+    "teamMembers": ["Adriana Sprincean","Ion Mardari"]
 }

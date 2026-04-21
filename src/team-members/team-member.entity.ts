@@ -1,3 +1,4 @@
+import { Exclude } from 'class-transformer';
 import { Customer } from 'src/customers/customer.entity';
 import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
 
@@ -30,5 +31,6 @@ export class TeamMember {
   @ManyToMany(() => Customer, (customer) => customer.teamMembers, {
     onDelete: 'CASCADE',
   })
+  @Exclude()
   customers?: Customer[];
 }
