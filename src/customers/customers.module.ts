@@ -1,4 +1,4 @@
-import { forwardRef, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { CustomersController } from './customers.controller';
 import { CustomersService } from './providers/customers.service';
 import { CreateCustomerProvider } from './providers/create-customer.provider';

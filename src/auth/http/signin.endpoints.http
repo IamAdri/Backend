@@ -1,0 +1,7 @@
+POST http://localhost:3001/auth/sign-in
+Content-Type: application/json
+
+{
+    "contactEmail":"mirel@gmail.com",
+    "password":"Password17!"
+}

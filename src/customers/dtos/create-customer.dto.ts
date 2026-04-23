@@ -3,8 +3,6 @@ import {
   IsDate,
   IsEmail,
   IsEnum,
-  IsIn,
-  IsInt,
   IsNotEmpty,
   IsOptional,
   IsString,
@@ -12,42 +10,42 @@ import {
 } from 'class-validator';
 import { customerProjectType } from '../enums/customerProjectType.enum';
 import { customerStatus } from '../enums/customerStatus.enum';
-import { TeamMember } from 'src/team-members/team-member.entity';
 
 export class CreateCustomerDto {
   @IsString()
   @MaxLength(55)
   @IsNotEmpty()
-  companyName: string;
+  companyName?: string;
 
   @IsString()
   @MaxLength(55)
   @IsNotEmpty()
-  contactName: string;
+  contactName?: string;
 
   @IsEmail()
   @IsNotEmpty()
-  contactEmail: string;
+  contactEmail?: string;
 
   @IsString()
   @MaxLength(55)
   @IsNotEmpty()
-  industry: string;
+  industry?: string;
 
   @IsEnum(customerProjectType)
   @IsNotEmpty()
-  projectType: customerProjectType;
+  projectType?: customerProjectType;
 
   @IsEnum(customerStatus)
   @IsNotEmpty()
-  status: customerStatus;
+  status?: customerStatus;
 
   @IsDate()
   @IsNotEmpty()
-  deadline: Date;
+  deadline?: Date;
+}
 
+/*
   @IsOptional()
   @IsArray()
   @IsString({ each: true })
-  teamMembers?: string[];
-}
+  teamMembers?: string[];*/

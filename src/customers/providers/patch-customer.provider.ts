@@ -1,9 +1,13 @@
-import { Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Customer } from '../customer.entity';
-import { In, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { PatchCustomerDto } from '../dtos/patch-customer.dto';
-import { TeamMembersService } from 'src/team-members/providers/team-members.service';
 import { TeamMember } from 'src/team-members/team-member.entity';
 
 @Injectable()
@@ -15,28 +19,48 @@ export class PatchCustomersProvider {
     /**Inject teamMemberRepository */
     @InjectRepository(TeamMember)
     private readonly teamMemberRepository: Repository<TeamMember>,
-    /**Inject TeamMembersService */
-    private readonly teamMembersService: TeamMembersService,
   ) {}
   public async update(patchCustomerDto: PatchCustomerDto, id: number) {
-    //Find the teamMembers associated
-    // let teamMembers;
-    //  if (patchCustomerDto.teamMembers) {
-    //   teamMembers = await this.teamMembersService.findMultipleTeamMembers(
-    //      patchCustomerDto.teamMembers,
-    //    );
-    //   }
+    //Check if id exists in DB
     const customer = await this.customersRepository.findOne({
       where: { id },
-      relations: ['teamMembers'],
     });
-    if (!customer) return null;
 
-    if (patchCustomerDto.teamMembers) {
-      customer.teamMembers = await this.teamMemberRepository.findBy({
-        name: In(patchCustomerDto.teamMembers),
-      });
+    if (!customer) {
+      throw new NotFoundException(`Customer with ID ${id} not found.`);
     }
+
+    //Check if company name is unique(if edited company name is not the same as the other company name with different id)
+    if (patchCustomerDto.companyName) {
+      const existingCompany = await this.customersRepository.findOne({
+        where: {
+          companyName: patchCustomerDto.companyName,
+        },
+      });
+      if (existingCompany && existingCompany.id !== id) {
+        throw new ConflictException(
+          'This company name has been already taken. Please change the edited company name!',
+        );
+      }
+    }
+
+    //Update the edited details
+    Object.assign(customer, patchCustomerDto);
+    try {
+      return await this.customersRepository.save(customer);
+    } catch (err) {
+      if (err && typeof err === 'object' && 'code' in err) {
+        if (err.code === '23505')
+          throw new ConflictException('Duplicate entry.');
+      }
+      throw new InternalServerErrorException(
+        'Error updating customer. Please try again!',
+      );
+    }
+  }
+}
+
+/*
     if (customer) {
       customer.companyName =
         patchCustomerDto.companyName ?? customer.companyName;
@@ -49,12 +73,5 @@ export class PatchCustomersProvider {
         patchCustomerDto.projectType ?? customer.projectType;
       customer.status = patchCustomerDto.status ?? customer.status;
       customer.deadline = patchCustomerDto.deadline ?? customer.deadline;
-      //customer.teamMembers = teamMembers;
     }
-
-    if (customer) {
-      await this.customersRepository.save(customer);
-    }
-    return customer;
-  }
-}
+*/

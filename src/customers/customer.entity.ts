@@ -13,34 +13,35 @@ import { TeamMember } from 'src/team-members/team-member.entity';
 @Entity()
 export class Customer {
   @PrimaryGeneratedColumn()
-  id: number;
+  id!: number;
+
+  @Column({
+    type: 'varchar',
+    length: 55,
+    nullable: false,
+    unique: true,
+  })
+  companyName!: string;
 
   @Column({
     type: 'varchar',
     length: 55,
     nullable: false,
   })
-  companyName: string;
+  contactName!: string;
+
+  @Column({
+    type: 'varchar',
+    nullable: false,
+  })
+  contactEmail!: string;
 
   @Column({
     type: 'varchar',
     length: 55,
     nullable: false,
   })
-  contactName: string;
-
-  @Column({
-    type: 'varchar',
-    nullable: false,
-  })
-  contactEmail: string;
-
-  @Column({
-    type: 'varchar',
-    length: 55,
-    nullable: false,
-  })
-  industry: string;
+  industry!: string;
 
   @Column({
     type: 'enum',
@@ -48,7 +49,7 @@ export class Customer {
     nullable: false,
     default: customerProjectType.CRM,
   })
-  projectType: customerProjectType;
+  projectType!: customerProjectType;
 
   @Column({
     type: 'enum',
@@ -56,7 +57,7 @@ export class Customer {
     nullable: false,
     default: customerStatus.SCHEDULED,
   })
-  status: customerStatus;
+  status!: customerStatus;
 
   @ManyToMany(() => TeamMember, (teamMember) => teamMember.customers)
   @JoinTable()
@@ -66,8 +67,8 @@ export class Customer {
     type: 'timestamp',
     nullable: false,
   })
-  deadline: Date;
+  deadline!: Date;
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt!: Date;
 }

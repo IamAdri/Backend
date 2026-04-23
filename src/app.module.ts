@@ -6,9 +6,15 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { CustomersModule } from './customers/customers.module';
 import { PaginationModule } from './common/pagination/pagination.module';
 import { TeamMembersModule } from './team-members/team-members.module';
+import { AuthModule } from './auth/auth.module';
 import appConfig from './config/app.config';
 import databaseConfig from './config/database.config';
 import environmentValidation from './config/environment.validation';
+import jwtConfig from './auth/config/jwt.config';
+import { JwtModule } from '@nestjs/jwt';
+import { APP_GUARD } from '@nestjs/core';
+import { AccessTokenGuard } from './auth/guards/access-token/access-token.guard';
+import { AuthenticationGuard } from './auth/guards/authentication/authentication.guard';
 
 const ENV = process.env.NODE_ENV;
 
@@ -37,8 +43,18 @@ const ENV = process.env.NODE_ENV;
     CustomersModule,
     PaginationModule,
     TeamMembersModule,
+    AuthModule,
+    ConfigModule.forFeature(jwtConfig),
+    JwtModule.registerAsync(jwtConfig.asProvider()),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: AuthenticationGuard,
+    },
+    AccessTokenGuard,
+  ],
 })
 export class AppModule {}

@@ -1,6 +1,7 @@
 POST http://localhost:3001/customers
 Content-Type: application/json
 
+
 {
     "companyName": "Beauty",
     "contactName": "Mirela Donici",
@@ -8,6 +9,5 @@ Content-Type: application/json
     "industry": "e-commerce",
     "projectType":"web_platform",
     "status": "scheduled",
-    "deadline": "2026-12-25T16:03:21.482Z",
-    "teamMembers": [9]
+    "deadline": "2026-12-25T16:03:21.482Z"
 }
